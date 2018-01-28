@@ -1,0 +1,10 @@
+*.bin
+*.lst
+*.bim
+*.gas
+*.hrb
+*.map
+bootpack.nas
+*.obj
+*.sys
+
