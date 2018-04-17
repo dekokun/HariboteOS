@@ -21,8 +21,8 @@ void io_out8(int port, int data);
 int io_load_eflags(void);
 void io_store_eflags(int eflags);
 
-/* À‚Í“¯‚¶ƒ\[ƒXƒtƒ@ƒCƒ‹‚É‘‚¢‚Ä‚ ‚Á‚Ä‚àA’è‹`‚·‚é‘O‚Ég‚¤‚Ì‚È‚çA
-	‚â‚Á‚Ï‚èéŒ¾‚µ‚Ä‚¨‚©‚È‚¢‚Æ‚¢‚¯‚È‚¢B */
+/* å®Ÿã¯åŒã˜ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ã„ã¦ã‚ã£ã¦ã‚‚ã€å®šç¾©ã™ã‚‹å‰ã«ä½¿ã†ã®ãªã‚‰ã€
+	ã‚„ã£ã±ã‚Šå®£è¨€ã—ã¦ãŠã‹ãªã„ã¨ã„ã‘ãªã„ã€‚ */
 
 void init_palette(void);
 void set_palette(int start, int end, unsigned char *rgb);
@@ -30,14 +30,14 @@ void boxfill(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, in
 
 void HariMain(void)
 {
-	unsigned char *vram; /* p‚Æ‚¢‚¤•Ï”‚ÍABYTE [...]—p‚Ì”Ô’n */
+	unsigned char *vram; /* pã¨ã„ã†å¤‰æ•°ã¯ã€BYTE [...]ç”¨ã®ç•ªåœ° */
     int xsize, ysize;
     xsize = 320;
     ysize = 200;
 
-    init_palette(); /* ƒpƒŒƒbƒg‚ğİ’è */
+    init_palette(); /* ãƒ‘ãƒ¬ãƒƒãƒˆã‚’è¨­å®š */
 
-    vram = (unsigned char *) 0xa0000; /* ”Ô’n‚ğ‘ã“ü */
+    vram = (unsigned char *) 0xa0000; /* ç•ªåœ°ã‚’ä»£å…¥ */
 
     boxfill(vram, xsize, COL8_008484,         0,          0,  xsize - 1, ysize - 29);
     boxfill(vram, xsize, COL8_C6C6C6,         0, ysize - 28,  xsize - 1, ysize - 28);
@@ -75,34 +75,34 @@ void boxfill(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, in
 void init_palette(void)
 {
 	static unsigned char table_rgb[16 * 3] = {
-		0x00, 0x00, 0x00,	/*  0:• */
-		0xff, 0x00, 0x00,	/*  1:–¾‚é‚¢Ô */
-		0x00, 0xff, 0x00,	/*  2:–¾‚é‚¢—Î */
-		0xff, 0xff, 0x00,	/*  3:–¾‚é‚¢‰©F */
-		0x00, 0x00, 0xff,	/*  4:–¾‚é‚¢Â */
-		0xff, 0x00, 0xff,	/*  5:–¾‚é‚¢‡ */
-		0x00, 0xff, 0xff,	/*  6:–¾‚é‚¢…F */
-		0xff, 0xff, 0xff,	/*  7:”’ */
-		0xc6, 0xc6, 0xc6,	/*  8:–¾‚é‚¢ŠDF */
-		0x84, 0x00, 0x00,	/*  9:ˆÃ‚¢Ô */
-		0x00, 0x84, 0x00,	/* 10:ˆÃ‚¢—Î */
-		0x84, 0x84, 0x00,	/* 11:ˆÃ‚¢‰©F */
-		0x00, 0x00, 0x84,	/* 12:ˆÃ‚¢Â */
-		0x84, 0x00, 0x84,	/* 13:ˆÃ‚¢‡ */
-		0x00, 0x84, 0x84,	/* 14:ˆÃ‚¢…F */
-		0x84, 0x84, 0x84	/* 15:ˆÃ‚¢ŠDF */
+		0x00, 0x00, 0x00,	/*  0:é»’ */
+		0xff, 0x00, 0x00,	/*  1:æ˜ã‚‹ã„èµ¤ */
+		0x00, 0xff, 0x00,	/*  2:æ˜ã‚‹ã„ç·‘ */
+		0xff, 0xff, 0x00,	/*  3:æ˜ã‚‹ã„é»„è‰² */
+		0x00, 0x00, 0xff,	/*  4:æ˜ã‚‹ã„é’ */
+		0xff, 0x00, 0xff,	/*  5:æ˜ã‚‹ã„ç´« */
+		0x00, 0xff, 0xff,	/*  6:æ˜ã‚‹ã„æ°´è‰² */
+		0xff, 0xff, 0xff,	/*  7:ç™½ */
+		0xc6, 0xc6, 0xc6,	/*  8:æ˜ã‚‹ã„ç°è‰² */
+		0x84, 0x00, 0x00,	/*  9:æš—ã„èµ¤ */
+		0x00, 0x84, 0x00,	/* 10:æš—ã„ç·‘ */
+		0x84, 0x84, 0x00,	/* 11:æš—ã„é»„è‰² */
+		0x00, 0x00, 0x84,	/* 12:æš—ã„é’ */
+		0x84, 0x00, 0x84,	/* 13:æš—ã„ç´« */
+		0x00, 0x84, 0x84,	/* 14:æš—ã„æ°´è‰² */
+		0x84, 0x84, 0x84	/* 15:æš—ã„ç°è‰² */
 	};
 	set_palette(0, 15, table_rgb);
 	return;
 
-	/* static char –½—ß‚ÍAƒf[ƒ^‚É‚µ‚©g‚¦‚È‚¢‚¯‚ÇDB–½—ß‘Š“– */
+	/* static char å‘½ä»¤ã¯ã€ãƒ‡ãƒ¼ã‚¿ã«ã—ã‹ä½¿ãˆãªã„ã‘ã©DBå‘½ä»¤ç›¸å½“ */
 }
 
 void set_palette(int start, int end, unsigned char *rgb)
 {
 	int i, eflags;
-	eflags = io_load_eflags();	/* Š„‚è‚İ‹–‰Âƒtƒ‰ƒO‚Ì’l‚ğ‹L˜^‚·‚é */
-	io_cli(); 					/* ‹–‰Âƒtƒ‰ƒO‚ğ0‚É‚µ‚ÄŠ„‚è‚İ‹Ö~‚É‚·‚é */
+	eflags = io_load_eflags();	/* å‰²ã‚Šè¾¼ã¿è¨±å¯ãƒ•ãƒ©ã‚°ã®å€¤ã‚’è¨˜éŒ²ã™ã‚‹ */
+	io_cli(); 					/* è¨±å¯ãƒ•ãƒ©ã‚°ã‚’0ã«ã—ã¦å‰²ã‚Šè¾¼ã¿ç¦æ­¢ã«ã™ã‚‹ */
 	io_out8(0x03c8, start);
 	for (i = start; i <= end; i++) {
 		io_out8(0x03c9, rgb[0] / 4);
@@ -110,6 +110,6 @@ void set_palette(int start, int end, unsigned char *rgb)
 		io_out8(0x03c9, rgb[2] / 4);
 		rgb += 3;
 	}
-	io_store_eflags(eflags);	/* Š„‚è‚İ‹–‰Âƒtƒ‰ƒO‚ğŒ³‚É–ß‚· */
+	io_store_eflags(eflags);	/* å‰²ã‚Šè¾¼ã¿è¨±å¯ãƒ•ãƒ©ã‚°ã‚’å…ƒã«æˆ»ã™ */
 	return;
 }
