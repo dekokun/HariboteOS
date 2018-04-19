@@ -20,53 +20,57 @@ void io_cli(void);
 void io_out8(int port, int data);
 int io_load_eflags(void);
 void io_store_eflags(int eflags);
+void init_screen(unsigned char *vram, int x, int y);
 
 /* 実は同じソースファイルに書いてあっても、定義する前に使うのなら、
 	やっぱり宣言しておかないといけない。 */
 
 void init_palette(void);
 void set_palette(int start, int end, unsigned char *rgb);
-void boxfill(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, int x1, int y1);
+void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, int x1, int y1);
+
+struct BOOTINFO {
+    char cyls, leds, vmode, reserve;
+    short scrnx, scrny;
+    unsigned char *vram;
+};
+
+void putfont8(unsigned char *vram, int xsize, int x, int y, char c, char *font) {
+    int i;
+    unsigned char *p, d; /* data */
+    for (i = 0; i < 16; i++) {
+        p = vram + (y + i) * xsize + x;
+        d = font[i];
+        if ((d & 0x80) != 0) {p[0] = c; }
+        if ((d & 0x40) != 0) {p[1] = c; }
+        if ((d & 0x20) != 0) {p[2] = c; }
+        if ((d & 0x10) != 0) {p[3] = c; }
+        if ((d & 0x08) != 0) {p[4] = c; }
+        if ((d & 0x04) != 0) {p[5] = c; }
+        if ((d & 0x02) != 0) {p[6] = c; }
+        if ((d & 0x01) != 0) {p[7] = c; }
+    }
+    return;
+}
 
 void HariMain(void)
 {
-	unsigned char *vram; /* pという変数は、BYTE [...]用の番地 */
-    int xsize, ysize;
-    short *binfo_scrnx, *binfo_scrny;
-    int *binfo_vram;
+    struct BOOTINFO *binfo = (struct BOOTINFO *) 0x0ff0;
+    static char font_A[16] = {
+        0x00, 0x18, 0x18, 0x18, 0x18, 0x24, 0x24, 0x24,
+        0x24, 0x7e, 0x42, 0x42, 0x42, 0xe7, 0x00, 0x00
+    };
 
     init_palette(); /* パレットを設定 */
-    binfo_scrnx = (short *) 0x0ff4;
-    binfo_scrny = (short *) 0x0ff6;
-    binfo_vram = (int *) 0x0ff8;
-
-    xsize = *binfo_scrnx;
-    ysize = *binfo_scrny;
-    vram = (char *) *binfo_vram; /* 番地を代入 */
-
-    boxfill(vram, xsize, COL8_008484,         0,          0,  xsize - 1, ysize - 29);
-    boxfill(vram, xsize, COL8_C6C6C6,         0, ysize - 28,  xsize - 1, ysize - 28);
-    boxfill(vram, xsize, COL8_FFFFFF,         0, ysize - 27,  xsize - 1, ysize - 27);
-    boxfill(vram, xsize, COL8_C6C6C6,         0, ysize - 26,  xsize - 1, ysize -  1);
-
-    boxfill(vram, xsize, COL8_FFFFFF,         3, ysize - 24,         59, ysize - 24);
-    boxfill(vram, xsize, COL8_FFFFFF,         2, ysize - 24,          2, ysize -  4);
-    boxfill(vram, xsize, COL8_848484,         3, ysize -  4,         59, ysize -  4);
-    boxfill(vram, xsize, COL8_848484,        59, ysize - 23,         59, ysize -  5);
-    boxfill(vram, xsize, COL8_000000,         2, ysize -  3,         59, ysize -  3);
-    boxfill(vram, xsize, COL8_000000,        60, ysize - 24,         60, ysize -  3);
-
-    boxfill(vram, xsize, COL8_848484,xsize - 47, ysize - 24,  xsize - 4, ysize - 24);
-    boxfill(vram, xsize, COL8_848484,xsize - 47, ysize - 23, xsize - 47, ysize -  4);
-    boxfill(vram, xsize, COL8_848484,xsize - 47, ysize -  3, xsize -  4, ysize -  3);
-    boxfill(vram, xsize, COL8_848484,xsize -  3, ysize - 24, xsize -  3, ysize -  3);
+    init_screen(binfo->vram, binfo->scrnx, binfo->scrny);
+    putfont8(binfo->vram, binfo->scrnx, 10, 10, COL8_FFFFFF, font_A);
 
     for (;;) {
         io_hlt();
     }
 }
 
-void boxfill(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, int x1, int y1)
+void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, int x1, int y1)
 {
     int x, y;
     for (y=y0; y<= y1; y++) {
@@ -118,3 +122,23 @@ void set_palette(int start, int end, unsigned char *rgb)
 	io_store_eflags(eflags);	/* 割り込み許可フラグを元に戻す */
 	return;
 }
+
+void init_screen(unsigned char *vram, int x, int y) {
+    boxfill8(vram, x, COL8_008484,         0,          0,  x - 1, y - 29);
+    boxfill8(vram, x, COL8_C6C6C6,         0, y - 28,  x - 1, y - 28);
+    boxfill8(vram, x, COL8_FFFFFF,         0, y - 27,  x - 1, y - 27);
+    boxfill8(vram, x, COL8_C6C6C6,         0, y - 26,  x - 1, y -  1);
+
+    boxfill8(vram, x, COL8_FFFFFF,         3, y - 24,         59, y - 24);
+    boxfill8(vram, x, COL8_FFFFFF,         2, y - 24,          2, y -  4);
+    boxfill8(vram, x, COL8_848484,         3, y -  4,         59, y -  4);
+    boxfill8(vram, x, COL8_848484,        59, y - 23,         59, y -  5);
+    boxfill8(vram, x, COL8_000000,         2, y -  3,         59, y -  3);
+    boxfill8(vram, x, COL8_000000,        60, y - 24,         60, y -  3);
+
+    boxfill8(vram, x, COL8_848484,x - 47, y - 24,  x - 4, y - 24);
+    boxfill8(vram, x, COL8_848484,x - 47, y - 23, x - 47, y -  4);
+    boxfill8(vram, x, COL8_848484,x - 47, y -  3, x -  4, y -  3);
+    boxfill8(vram, x, COL8_848484,x -  3, y - 24, x -  3, y -  3);
+}
+
