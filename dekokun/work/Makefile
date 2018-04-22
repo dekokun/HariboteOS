@@ -91,3 +91,4 @@ clean :
 src_only :
 	$(MAKE) clean
 	-$(DEL) haribote.img
+include dekokun.mk
