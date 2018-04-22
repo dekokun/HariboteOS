@@ -6,14 +6,14 @@ NASK     = $(TOOLPATH)nask
 CC1      = $(TOOLPATH)gocc1 -I$(INCPATH) -Os -Wall -quiet
 GAS2NASK = $(TOOLPATH)gas2nask -a
 OBJ2BIM  = $(TOOLPATH)obj2bim
+MAKEFONT = $(TOOLPATH)makefont
+BIN2OBJ  = $(TOOLPATH)bin2obj
 BIM2HRB  = $(TOOLPATH)bim2hrb
 RULEFILE = $(TOOLPATH)haribote/haribote.rul
 EDIMG    = $(TOOLPATH)edimg
 IMGTOL   = $(TOOLPATH)imgtol
 COPY     = cp
 DEL      = rm -f
-MAKEFONT = $(TOOLPATH)makefont
-BIN2OBJ  = $(TOOLPATH)bin2obj
 
 # デフォルト動作
 
@@ -46,16 +46,34 @@ hankaku.bin : hankaku.txt Makefile
 hankaku.obj : hankaku.bin Makefile
 	$(BIN2OBJ) hankaku.bin hankaku.obj _hankaku
 
-bootpack.bim : bootpack.obj naskfunc.obj hankaku.obj Makefile
+graphic.gas : graphic.c Makefile
+	$(CC1) -o graphic.gas graphic.c
+
+graphic.nas : graphic.gas Makefile
+	$(GAS2NASK) graphic.gas graphic.nas
+
+graphic.obj : graphic.nas Makefile
+	$(NASK) graphic.nas graphic.obj graphic.lst
+
+dsctbl.gas : dsctbl.c Makefile
+	$(CC1) -o dsctbl.gas dsctbl.c
+
+dsctbl.nas : dsctbl.gas Makefile
+	$(GAS2NASK) dsctbl.gas dsctbl.nas
+
+dsctbl.obj : dsctbl.nas Makefile
+	$(NASK) dsctbl.nas dsctbl.obj dsctbl.lst
+
+bootpack.bim : bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj Makefile
 	$(OBJ2BIM) @$(RULEFILE) out:bootpack.bim stack:3136k map:bootpack.map \
-		bootpack.obj naskfunc.obj hankaku.obj
+		bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj
 # 3MB+64KB=3136KB
 
 bootpack.hrb : bootpack.bim Makefile
 	$(BIM2HRB) bootpack.bim bootpack.hrb 0
 
 haribote.sys : asmhead.bin bootpack.hrb Makefile
-	cat asmhead.bin bootpack.hrb > haribote.sys
+	cat  asmhead.bin bootpack.hrb > haribote.sys
 
 haribote.img : ipl10.bin haribote.sys Makefile
 	$(EDIMG)   imgin:../../z_tools/fdimg0at.tek \
@@ -83,6 +101,8 @@ clean :
 	-$(DEL) *.gas
 	-$(DEL) *.obj
 	-$(DEL) bootpack.nas
+	-$(DEL) graphic.nas
+	-$(DEL) dsctbl.nas
 	-$(DEL) bootpack.map
 	-$(DEL) bootpack.bim
 	-$(DEL) bootpack.hrb

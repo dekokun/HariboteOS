@@ -4,7 +4,7 @@
 *.gas
 *.hrb
 *.map
-bootpack.nas
+*.nas
 *.obj
 *.sys
 
