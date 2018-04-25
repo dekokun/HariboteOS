@@ -13,4 +13,5 @@ remove:
 init:
 	make remove
 	VBoxManage createvm --name $(OSNAME) --ostype Other --register
+	VBoxManage modifyvm  $(OSNAME) --ostype Other --memory 32
 	VBoxManage storagectl $(OSNAME) --name Floppy --add floppy
