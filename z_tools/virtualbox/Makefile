@@ -2,6 +2,7 @@ OSNAME:=dekoos
 
 .PHONY: default
 default:
+	$(MAKE) init
 	VBoxManage storageattach $(OSNAME) --storagectl Floppy --device 0 --medium img.img
 	VBoxManage startvm $(OSNAME)
 
