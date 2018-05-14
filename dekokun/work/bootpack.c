@@ -62,7 +62,7 @@ void HariMain(void)
 	timer_settime(timer3, 50);
 	timer_ts = timer_alloc();
 	timer_init(timer_ts, &fifo, 2);
-	timer_settime(timer_ts, 2);
+	timer_settime(timer_ts, 200);
 
 	memtotal = memtest(0x00400000, 0xbfffffff);
 	memman_init(memman);
@@ -304,7 +304,7 @@ void task_b_main(void)
 			io_sti();
 			if (i == 1) { /* タスクスイッチ */
 				farjmp(1000, 3 * 8);
-				timer_settime(timer_ts, 2);
+				timer_settime(timer_ts, 200);
 			}
 		}
 	}
