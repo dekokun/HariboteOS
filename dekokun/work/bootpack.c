@@ -62,7 +62,7 @@ void HariMain(void)
 	timer_settime(timer3, 50);
 	timer_ts = timer_alloc();
 	timer_init(timer_ts, &fifo, 2);
-	timer_settime(timer_ts, 200);
+	timer_settime(timer_ts, 2);
 
 	memtotal = memtest(0x00400000, 0xbfffffff);
 	memman_init(memman);
@@ -132,7 +132,7 @@ void HariMain(void)
 			i = fifo32_get(&fifo);
 			io_sti();
 			if (i == 2) {
-				farjmp(100, 4 * 8);
+				farjmp(0, 4 * 8);
 				timer_settime(timer_ts, 2);
 			} else if (256 <= i && i <= 511) { /* キーボードデータ */
 				sprintf(s, "%02X", i - 256);
@@ -303,8 +303,8 @@ void task_b_main(void)
 			i = fifo32_get(&fifo);
 			io_sti();
 			if (i == 1) { /* タスクスイッチ */
-				farjmp(1000, 3 * 8);
-				timer_settime(timer_ts, 200);
+				farjmp(0, 3 * 8);
+				timer_settime(timer_ts, 2);
 			}
 		}
 	}
