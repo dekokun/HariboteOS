@@ -4,7 +4,6 @@
 *.gas
 *.hrb
 *.map
-*.nas
 *.obj
 *.sys
 
