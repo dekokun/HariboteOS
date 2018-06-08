@@ -8,7 +8,7 @@ void HariMain(void)
 	api_putchar(a[10]);
 	a[102] = 'B';		/* これはまずいよね */
 	api_putchar(a[102]);
-    char b = 1/0;
-	api_putchar(b);
+	a[123] = 'C';		/* これもまずいよね */
+	api_putchar(a[123]);
 	api_end();
 }
