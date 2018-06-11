@@ -3,6 +3,7 @@ void api_initmalloc(void);
 char *api_malloc(int size);
 void api_refreshwin(int win, int x0, int y0, int x1, int y1);
 void api_linewin(int win, int x0, int y0, int x1, int y1, int col);
+void api_closewin(int win);
 void api_end(void);
 
 void HariMain(void)
@@ -16,7 +17,7 @@ void HariMain(void)
 		api_linewin(win + 1,  8, 26, 77, i * 9 + 26, i);
 		api_linewin(win + 1, 88, 26, i * 9 + 88, 89, i);
 	}
-		api_linewin(win + 1,  8, 30, 77, 30, 10);
 	api_refreshwin(win,  6, 26, 154, 90);
+	api_closewin(win);
 	api_end();
 }
