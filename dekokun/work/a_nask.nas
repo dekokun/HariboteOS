@@ -31,7 +31,7 @@ _api_putchar:	; void api_putchar(int c);
 		INT		0x40
 		RET
 
-_api_putstr0:	; void api_putchar(char *s);
+_api_putstr0:	; void api_putstr0(char *s);
 		PUSH	EBX
 		MOV		EDX,2
 		MOV		EBX,[ESP+8]		; s
